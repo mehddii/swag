@@ -1,4 +1,4 @@
-package main
+package tokenizer
 
 import (
 	"testing"
@@ -18,7 +18,7 @@ func TestNextToken(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		next := tokenizer.NextToken()
+		next, _ := tokenizer.NextToken()
 
 		if next.Type != test.Type {
 			t.Fatalf("expected %v; got %v", test.Type, next.Type)
