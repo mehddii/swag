@@ -28,8 +28,10 @@ func (t *Tokenizer) Advance() {
 }
 
 func (t *Tokenizer) NextToken() *Token {
-	tok := NewToken(ILLEGAL, 0)
+	t.ConsumeWhitespace()
+
 	ch := t.Char
+	tok := NewToken(ILLEGAL, ch)
 
 	switch ch {
 	case '=':
@@ -56,8 +58,48 @@ func (t *Tokenizer) NextToken() *Token {
 		tok = NewToken(RBRACE, ch)
 	case 0:
 		tok.Type = EOF
+		tok.Literal = ""
+	default:
+		if IsLetter(ch) {
+			tok.Literal = t.ReadIdent()
+			tok.Type = LookupIdent(tok.Literal)
+			return tok
+		} else if IsDigit(ch) {
+			tok.Literal = t.ReadNum()
+			tok.Type = INTEGER
+			return tok
+		}
 	}
 
 	t.Advance()
 	return tok
 }
+
+func (t *Tokenizer) ReadIdent() string {
+	start := t.Current
+
+	for IsLetter(t.Char) || IsDigit(t.Char) {
+		t.Advance()
+	}
+
+	return t.Input[start:t.Current]
+}
+
+func (t *Tokenizer) ReadNum() string {
+	start := t.Current
+
+	for IsDigit(t.Char) {
+		t.Advance()
+	}
+
+	return t.Input[start:t.Current]
+
+}
+
+func (t *Tokenizer) ConsumeWhitespace() {
+	for IsSpace(t.Char) {
+		t.Advance()
+	}
+}
+
+// we need to handle integers and floats

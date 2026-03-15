@@ -68,4 +68,18 @@ var (
 		ILLEGAL:   "ILLEGAL",
 		EOF:       "EOF",
 	}
+
+	keywords = map[string]TokenType{
+		"def":    DEF,
+		"func":   FUNC,
+		"return": RETURN,
+	}
 )
+
+func LookupIdent(ident string) TokenType {
+	if tokenType, ok := keywords[ident]; ok {
+		return tokenType
+	}
+
+	return IDENT
+}
