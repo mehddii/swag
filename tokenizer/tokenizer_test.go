@@ -5,27 +5,34 @@ import (
 )
 
 func TestNextToken(t *testing.T) {
-	input := "1 + 2;"
+	input := "=+-*/({});"
 	tokenizer := NewTokenizer(input)
 
 	tests := []struct {
 		Type    TokenType
 		Literal string
 	}{
-		{INTEGER, "1"},
+		{ASSIGN, "="},
 		{PLUS, "+"},
-		{INTEGER, "2"},
+		{MINUS, "-"},
+		{ASTERISK, "*"},
+		{SLASH, "/"},
+		{LPAREN, "("},
+		{LBRACE, "{"},
+		{RBRACE, "}"},
+		{RPAREN, ")"},
+		{SEMICOLON, ";"},
 	}
 
 	for _, test := range tests {
-		next, _ := tokenizer.NextToken()
+		tok := tokenizer.NextToken()
 
-		if next.Type != test.Type {
-			t.Fatalf("expected %v; got %v", test.Type, next.Type)
+		if tok.Type != test.Type {
+			t.Fatalf("expected %v; got %v", test.Type, tok.Type)
 		}
 
-		if next.Literal != test.Literal {
-			t.Fatalf("expected %v; got %v", test.Literal, next.Literal)
+		if tok.Literal != test.Literal {
+			t.Fatalf("expected %v; got %v", test.Literal, tok.Literal)
 		}
 	}
 }
