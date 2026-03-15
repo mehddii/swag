@@ -3,14 +3,13 @@ package main
 import (
 	"fmt"
 	"github.com/mehddii/swag/tokenizer"
-	"io"
 )
 
 func main() {
-	input := "1 + 2;"
+	input := "+()-=;"
 
-	tokenizer := tokenizer.NewTokenizer(input)
-	for t, err := tokenizer.NextToken(); err != io.EOF; t, err = tokenizer.NextToken() {
-		fmt.Println(t)
+	t := tokenizer.NewTokenizer(input)
+	for tok := t.NextToken(); tok.Type != tokenizer.EOF; tok = t.NextToken() {
+		fmt.Printf("Token Type: %q, Token Literal: %q\n", tok.Type, tok.Literal)
 	}
 }
