@@ -27,6 +27,14 @@ func (t *Tokenizer) Advance() {
 	t.Next++
 }
 
+func (t *Tokenizer) Peek() byte {
+	if t.Next >= len(t.Input) {
+		return 0
+	}
+
+	return t.Input[t.Next]
+}
+
 func (t *Tokenizer) NextToken() *Token {
 	t.ConsumeWhitespace()
 
@@ -35,7 +43,39 @@ func (t *Tokenizer) NextToken() *Token {
 
 	switch ch {
 	case '=':
-		tok = NewToken(ASSIGN, ch)
+		if t.Peek() == '=' {
+			tok.Type = EQ_EQ
+			tok.Literal = "=="
+			t.Advance()
+		} else {
+			tok = NewToken(ASSIGN, ch)
+		}
+	case '!':
+		if t.Peek() == '=' {
+			tok.Type = BANG_EQ
+			tok.Literal = "!="
+			t.Advance()
+		} else {
+			tok = NewToken(BANG, ch)
+		}
+	case '<':
+		if t.Peek() == '=' {
+			tok.Type = LESS_EQ
+			tok.Literal = "<="
+			t.Advance()
+		} else {
+			tok = NewToken(LESS, ch)
+		}
+	case '>':
+		if t.Peek() == '=' {
+			tok.Type = LESS_EQ
+			tok.Literal = ">="
+			t.Advance()
+		} else {
+			tok = NewToken(LESS, ch)
+		}
+	case '.':
+
 	case '+':
 		tok = NewToken(PLUS, ch)
 	case '-':
