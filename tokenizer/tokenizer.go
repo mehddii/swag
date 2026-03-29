@@ -19,6 +19,7 @@ func NewTokenizer(input string) *Tokenizer {
 func (t *Tokenizer) Advance() {
 	if t.Next >= len(t.Input) {
 		t.Char = 0
+		t.Current++
 		return
 	}
 
